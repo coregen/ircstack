@@ -1,0 +1,52 @@
+---
+- name: Create weechat user
+  user:
+    name: weechat
+    shell: /bin/bash
+
+- name: Make www dir
+  file:
+    path: /var/lib/www-glowingbear
+    state: directory
+    mode: '0755'
+
+- name: Make creds dir
+  file:
+    path: /etc/creds
+    state: directory
+    mode: '0755'
+
+- name: Create weechat key
+  shell: >
+    openssl req -x509 -nodes -newkey rsa:4096 -sha256 -keyout relay.key
+    -out relay.pem -days 365 -subj '/CN=weechat relay/'
+
+- name: Download glowing bear
+  git:
+    repo: 'https://github.com/glowingbear/glowingbear.git'
+    version: master
+    dest: /var/lib/www-glowingbear
+
+- include_tasks: setup-debian.yml
+  when: ansible_os_family == 'Debian'
+
+- name: Template weechat.service
+  template:
+    src: /weechat.service.j2
+    dest: /etc/systemd/system/weechat.service
+    owner: root
+    mode: '0755'
+
+- name: Template weechat relay config
+  template:
+    src: /relay.conf.j2
+    dest: /home/weechat/.weechat/relay.conf
+    owner: weechat
+    mode: '0755'
+
+- name: Template nginx site
+  template:
+    src: /glowingbear-site.j2
+    dest: /etc/nginx/sites-enabled/glowingbear
+    owner: root
+    mode: '0755'

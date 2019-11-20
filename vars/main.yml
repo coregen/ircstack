@@ -1,0 +1,10 @@
+---
+weechat_external_ssl_cert: /var/lib/weechat_external_ssl_cert.ssl
+weechat_internal_ssl_cert: /var/lib/weechat_internal_ssl_cert.ssl
+weechat_config_repo: false
+server_url: localhost
+glowingbear_password: gbpass
+signed_cert_plus_intermediates_path: false
+private_key_path: false
+with_ssl: false
+relay_ssl_cert: /etc/creds/relay.pem

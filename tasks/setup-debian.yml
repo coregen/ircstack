@@ -1,0 +1,8 @@
+---
+- name: Update, Upgrade and install requirements
+  apt:
+    update_cache: true
+    upgrade: dist
+    pkg:
+      - nginx
+      - weechat
