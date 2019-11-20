@@ -2,7 +2,30 @@
 - name: Update, Upgrade and install requirements
   apt:
     update_cache: true
-    upgrade: dist
+    # upgrade: dist
     pkg:
       - nginx
-      - weechat
+      - openssl
+      - git
+      - dirmngr
+      - gpg-agent
+      - apt-transport-https
+
+- name: Add weechat keys
+  apt_key:
+    keyserver: hkps://keys.openpgp.org
+    id: 11E9DE8848F2B65222AA75B8D1820DB22A11534E
+
+# This should b transcribed and added.
+# echo "deb https://weechat.org/debian stretch main" | sudo tee /etc/apt/sources.list.d/weechat.list
+# echo "deb-src https://weechat.org/debian stretch main" | sudo tee -a /etc/apt/sources.list.d/weechat.list
+
+- name: Update and install weechat
+  apt:
+    update_cache: true
+    pkg:
+      - weechat-ncurses
+      - weechat-plugins
+      - weechat-python
+      - weechat-perl
+      - weechat-headless
