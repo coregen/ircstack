@@ -17,11 +17,19 @@
     state: directory
     mode: '0755'
 
+- name: Make ssl creds dir
+  file:
+    owner: root
+    path: /usr/lib/systemd/system
+    state: directory
+    mode: '0755'
+
 - name: Make weechat config dir
   file:
     path: /home/weechat/.weechat
     state: directory
     mode: '0755'
+    owner: weechat
 
 - include_tasks: setup-debian.yml
   when: ansible_os_family == 'Debian'
@@ -40,7 +48,7 @@
 - name: Template weechat.service
   template:
     src: weechat.service.j2
-    dest: /etc/systemd/system/weechat.service
+    dest: /usr/lib/systemd/system/weechat.service
     owner: root
     mode: '0755'
 
@@ -57,3 +65,11 @@
     dest: /etc/nginx/sites-enabled/glowingbear
     owner: root
     mode: '0755'
+  vars:
+    nginx_with_ssl: nginx_with_ssl
+
+- name: Activate weechat service
+  systemd:
+    name: weechat
+    enabled: true
+    state: started

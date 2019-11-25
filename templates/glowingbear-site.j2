@@ -10,10 +10,14 @@ upstream weechat {
 }
 
 server {
+  {% if nginx_with_ssl is sameas true %}
   listen 443;
+  {% else %}
+  listen 80;
+  {% endif %}
   server_name {{ server_url }};
 
-  {% if with_ssl %}
+  {% if nginx_with_ssl is sameas true %}
   # certs sent to the client in SERVER HELLO are concatenated in ssl_certificate
   ssl_certificate {{ signed_cert_plus_intermediates_path }};
   ssl_certificate_key {{ private_key_path }}
@@ -40,9 +44,12 @@ server {
   ssl_trusted_certificate /path/to/root_CA_cert_plus_intermediates;
 
   resolver <IP DNS resolver>;
+  {% else %}
+  
   {% endif %}
 
-  location / {
+
+  location /weechat {
       proxy_pass https://weechat;
       proxy_http_version 1.1;
       proxy_set_header Upgrade $http_upgrade;
@@ -53,6 +60,6 @@ server {
   }
 
   location / {
-    root /var/www/glowing-bear;
+    root /var/www/www-glowingbear;
   }
 }
