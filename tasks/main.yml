@@ -4,20 +4,15 @@
     name: weechat
     shell: /bin/bash
     create_home: true
-
-- name: Make glowing-bear www dir
-  file:
-    path: /var/lib/www-glowingbear
-    state: directory
-    mode: '0755'
+    home: "{{ weechat_home }}"
 
 - name: Make ssl creds dir
   file:
-    path: /etc/creds
+    path: "{{ ssl_creds_dir_path }}"
     state: directory
     mode: '0755'
 
-- name: Make ssl creds dir
+- name: Make systemd units dir
   file:
     owner: root
     path: /usr/lib/systemd/system
@@ -26,24 +21,36 @@
 
 - name: Make weechat config dir
   file:
-    path: /home/weechat/.weechat
+    path: "{{ weechat_config_dir_path }}"
     state: directory
     mode: '0755'
     owner: weechat
+
+- name: Make weechat creds dir
+  file:
+    path: "{{ relay_creds_dir }}"
+    state: directory
+    mode: '0755'
+    owner: weechat
+
+- name: Template weechat env file
+  template:
+    src: weechat_env.sh.j2
+    dest: "{{ weechat_env_file_path }}"
+    owner: weechat
+    mode: '0755'
 
 - include_tasks: setup-debian.yml
   when: ansible_os_family == 'Debian'
 
 - name: Create weechat key
   shell: >
-    openssl req -x509 -nodes -newkey rsa:4096 -sha256 -keyout relay.key
-    -out relay.pem -days 365 -subj '/CN=weechat relay/'
+    openssl req -x509 -nodes -newkey rsa:4096 -sha256 -keyout {{ relay_key_path }}
+    -out {{ relay_cert_path }} -days 365 -subj '/CN=weechat relay/'
 
-- name: Download glowing bear
-  git:
-    repo: 'https://github.com/glowing-bear/glowing-bear.git'
-    version: master
-    dest: /var/lib/www-glowingbear
+- name: Concatenate public cert and key into weechat relay cert
+  shell: >
+    cat {{ relay_cert_path }} {{ relay_key_path }} > {{ weechat_relay_cert_path }}
 
 - name: Template weechat.service
   template:
@@ -55,21 +62,22 @@
 - name: Template weechat relay config
   template:
     src: relay.conf.j2
-    dest: /home/weechat/.weechat/relay.conf
+    dest: "{{ weechat_config_dir_path}}/relay.conf"
     owner: weechat
     mode: '0755'
 
-- name: Template nginx site
-  template:
-    src: glowingbear-site.j2
-    dest: /etc/nginx/sites-enabled/glowingbear
-    owner: root
-    mode: '0755'
-  vars:
-    nginx_with_ssl: nginx_with_ssl
+- include_tasks: weechat_config.yml
+  when: weechat_config_repo
 
 - name: Activate weechat service
   systemd:
     name: weechat
     enabled: true
     state: started
+
+- include_tasks: glowingbear-frontend.yml
+  when: weechat_frontend
+
+- include_tasks: nginx.yml
+  when: nginx_with_reverse_proxy
+

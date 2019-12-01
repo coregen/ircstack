@@ -1,10 +1,21 @@
 ---
-weechat_external_ssl_cert: /var/lib/weechat_external_ssl_cert.ssl
-weechat_internal_ssl_cert: /var/lib/weechat_internal_ssl_cert.ssl
+nginx_with_reverse_proxy: true
+weechat_frontend: true
 weechat_config_repo: false
 server_url: localhost
-glowingbear_password: gbpass
 signed_cert_plus_intermediates_path: false
 private_key_path: false
 nginx_with_ssl: false
-relay_ssl_cert: /etc/creds/relay.pem
+ssl_creds_dir_path: /etc/creds
+weechat_relay_password: defaultpass
+weechat_home: /home/weechat
+weechat_config_dir: ".weechat"
+weechat_config_dir_path: "{{ weechat_home }}/{{ weechat_config_dir }}"
+weechat_env_file_path: "{{ weechat_config_dir_path }}/weechat_env.sh"
+weechat_config_repo_branch: "master"
+relay_creds_dir: "{{ weechat_config_dir_path }}/ssl"
+relay_cert_filename: relay.pem
+relay_key_filename: relay.key
+relay_cert_path: "{{ relay_creds_dir }}/{{ relay_cert_filename }}"
+relay_key_path: "{{ relay_creds_dir }}/{{ relay_key_filename }}"
+weechat_relay_cert_path: "{{ relay_creds_dir }}/weechat.pem"

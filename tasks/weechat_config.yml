@@ -1,0 +1,6 @@
+---
+- name: Clone the weechat config repo to weechat home
+  git:
+    repo: "{{ weechat_config_repo }}"
+    dest: "{{ weechat_config_dir_path }}"
+    version: "{{ weechat_config_repo_branch }}"
