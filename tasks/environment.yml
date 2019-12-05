@@ -1,0 +1,41 @@
+---
+- name: Create weechat user
+  user:
+    name: weechat
+    shell: /bin/bash
+    create_home: true
+    home: "{{ weechat_home }}"
+
+- name: Make ssl creds dir
+  file:
+    path: "{{ nginx_server_ssl_cert_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: Make systemd units dir
+  file:
+    owner: root
+    path: /usr/lib/systemd/system
+    state: directory
+    mode: '0755'
+
+- name: Make weechat config dir
+  file:
+    path: "{{ weechat_config_dir }}"
+    state: directory
+    mode: '0755'
+    owner: weechat
+
+- name: Make weechat creds dir
+  file:
+    path: "{{ relay_creds_dir }}"
+    state: directory
+    mode: '0755'
+    owner: weechat
+
+- name: Template weechat env file
+  template:
+    src: weechat_env.sh.j2
+    dest: "{{ weechat_env_file_path }}"
+    owner: weechat
+    mode: '0755'

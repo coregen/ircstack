@@ -19,7 +19,7 @@ server {
   ssl_session_cache shared:SSL:50m;
 
   # Diffie-Hellman parameter for DHE ciphersuites, recommended 2048 bits
-  ssl_dhparam /path/to/dhparam.pem;
+  ssl_dhparam {{ nginx_dhparam_path }};
 
   # Mozilla modern TLS configuration. tweak to your needs.
   ssl_protocols TLSv1.1 TLSv1.2;
@@ -49,7 +49,7 @@ server {
       proxy_http_version 1.1;
       proxy_set_header Upgrade $http_upgrade;
       proxy_set_header Connection "upgrade";
-      proxy_ssl_trusted_certificate {{ weechat_relay_cert_path }};
+      proxy_ssl_trusted_certificate {{ weechat_relay_cert }};
       proxy_ssl_verify off;
       proxy_read_timeout 4h;
   }

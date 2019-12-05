@@ -21,7 +21,7 @@
     repo: deb https://weechat.org/debian stretch main
     state: present
 
-- name: Add weechar src repository
+- name: Add weechat src repository
   apt_repository:
     repo: deb-src https://weechat.org/debian stretch main
     state: present
@@ -30,7 +30,7 @@
   apt:
     update_cache: true
     pkg:
-      #      - weechat-ncurses
+      - weechat
       - weechat-plugins
       - weechat-python
       - weechat-perl
