@@ -1,6 +1,0 @@
----
-- name: Activate nginx service
-  systemd:
-    name: nginx
-    enabled: true
-    state: started

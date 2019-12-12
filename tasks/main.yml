@@ -11,13 +11,6 @@
   when: weechat_config_repo
 
 - include_tasks: glowingbear.yml
-  when: weechat_frontend
-
-- name: Activate weechat service
-  systemd:
-    name: weechat
-    enabled: true
-    state: started
-
-- include_tasks: nginx.yml
   when: nginx_with_reverse_proxy
+
+- include_tasks: services.yml

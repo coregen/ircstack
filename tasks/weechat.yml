@@ -24,3 +24,4 @@
     dest: "{{ weechat_config_dir }}/relay.conf"
     owner: weechat
     mode: '0755'
+  when: not weechat_config_repo

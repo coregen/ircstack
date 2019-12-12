@@ -4,7 +4,7 @@
     update_cache: true
     # upgrade: dist
     pkg:
-      - nginx
+      - nginx-extras
       - openssl
       - git
       - dirmngr

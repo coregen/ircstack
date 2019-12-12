@@ -1,12 +1,9 @@
 ---
-# Weechat variables
-weechat_frontend: true
-
 # linux username that will run the weechat process
 weechat_username: "weechat"
 
 # default relay password
-weechat_relay_password: defaultpass
+weechat_relay_password: defaultpassword
 
 # weechat directory and file paths
 weechat_home: "/home/{{ weechat_username }}"

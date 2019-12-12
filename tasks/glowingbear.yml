@@ -7,7 +7,7 @@
 
 - name: Template nginx site
   template:
-    src: glowingbear-site.j2
+    src: glowingbear.j2
     dest: /etc/nginx/sites-available/glowingbear
     owner: root
     mode: '0755'

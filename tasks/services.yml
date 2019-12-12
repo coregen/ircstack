@@ -1,0 +1,13 @@
+---
+- name: Activate weechat service
+  systemd:
+    name: weechat
+    enabled: true
+    state: started
+
+- name: Activate nginx service
+  systemd:
+    name: nginx
+    enabled: true
+    state: started
+  when: nginx_with_reverse_proxy
