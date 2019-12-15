@@ -13,6 +13,9 @@ galaxy_info:
     versions:
     - 18.04
 
-  galaxy_tags: [irc, weechat, nginx, glowingbear]
+  galaxy_tags:
+  - irc
+  - weechat
+  - glowingbear
 
 dependencies: []
