@@ -1,0 +1,27 @@
+---
+name: Test ircstack role with molecule
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        image:
+          - debian9
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.7
+      - name: Install dependencies
+        run: |
+          sudo apt install docker git
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: "Test role"
+        run: |
+          molecule test
+        env:
+          MOLECULE_DISTRO: "${{ matrix.image }}"
